@@ -1,9 +1,22 @@
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import { Users } from "components";
 import styles from "../styles/Home.module.css";
+import { getUsers } from "firestoreService";
+import { getDocs, addDoc } from "firebase/firestore";
+import { usersCollection } from "firestoreService";
 
-const Home: NextPage = () => {
+export const getServerSideProps: GetServerSideProps = async () => {
+  const users = await getUsers();
+  const props = {
+    users,
+  };
+
+  return { props };
+};
+
+const Home: NextPage = ({ users }: any) => {
   return (
     <div className={styles.container}>
       <Head>
@@ -12,7 +25,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h1>Heroku deploy test</h1>
+      <Users users={users} />
     </div>
   );
 };
